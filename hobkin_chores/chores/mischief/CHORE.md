@@ -8,15 +8,23 @@ cause an outage.
 
 ## The rules of the game
 
-- **Only what you're given.** You may stop these services: `{{services}}`.
-  You may kill these processes: `{{processes}}`. You may open decoy ports in
-  {{ports}}. That's the whole playground. Nothing else, ever, however tempting.
-- **Never, even if listed:** ssh/sshd (you'd lock people out), the journal,
-  syslog, auditd, and the monitoring or alerting itself. Turning those off tests
-  whether you can hide, not whether they can see. And never touch hobkin.
+- **Your playground is your account.** Whatever this account may stop, kill or
+  open is fair game: the people who set you up chose its permissions for exactly
+  that. (If `{{services}}` or `{{processes}}` is set, you stick to those.) When
+  something turns out to be out of reach, the spell remembers and moves on. Don't
+  go looking for ways to reach more.
+- **Never, even if you can reach it:** ssh/sshd and the network stack
+  (NetworkManager, systemd-networkd, the resolver: you'd lock people out), the
+  journal, syslog, auditd, the monitoring and alerting itself (node_exporter,
+  telegraf, the datadog/grafana/zabbix/otel agents, fluentd/filebeat/vector...),
+  hobkin, your own shells and session, and anything in `{{spare}}`. Turning
+  monitoring off tests whether you can hide, not whether they can see.
+- **Not as root** (unless `allow_root` says yes): as root, "whatever you can reach"
+  means the whole machine, and a scoped account is the point.
 - **Always put it back.** Each prank lasts {{hold}} seconds, then it's undone. If
-  an undo fails (a service won't start, a process doesn't come back), that's an
-  emergency: `notify` at once, with exactly what's down and how to fix it.
+  an undo fails (a service won't start, a killed process has no supervisor to bring
+  it back), that's an emergency: `notify` at once, with exactly what's down and how
+  to fix it.
 - **Working hours only** ({{window}}), so someone's there to notice and respond.
 - **Off switch:** if `$HOBKIN_WORK/mischief.off` exists, no pranks. Anyone can
   `touch` it, and you never remove it yourself.
@@ -29,10 +37,10 @@ writes a row in `$HOBKIN_WORK/ledger.tsv` (when, what, target, undone or not). I
 prints nothing when all went well, so pranks cost no model calls. It only wakes
 you when something didn't come back.
 
-Stopping services needs privileges. The safe way is a sudoers rule that allows only
-`systemctl stop` and `systemctl start` on the listed units (`sudo -n` is used if you
-aren't root). If a prank can't run for lack of rights, the ledger says so. Don't go
-hunting for other ways in.
+What it can stop depends on how the account was set up: its own user units, system
+units its sudoers or polkit rules allow (`sudo -n` is tried, never a password
+prompt), and its own processes. Targets that turn out to be out of reach go in
+`$HOBKIN_WORK/mischief.cant` and are skipped from then on.
 
 ## Your part
 

@@ -1,17 +1,47 @@
 {
   "name": "mischief",
-  "description": "Chaos for your detection: during working hours, briefly stops allow-listed services, kills allow-listed processes and opens decoy ports, always puts things back, and keeps a ledger to score what your team caught.",
+  "description": "Chaos for your detection: during working hours, briefly stops services, kills processes and opens decoy ports, whatever its account can reach, always puts things back, and keeps a ledger to score what your team caught.",
   "settings": {
-    "services": {"about": "systemd units it MAY stop (space-separated). Nothing else is ever touched; there's no default, so you choose the blast radius"},
-    "processes": {"default": "", "about": "process names it may kill (should be supervised, so they come back), space-separated"},
-    "ports": {"default": "40000-40100", "about": "range for decoy listening ports (opened, held, closed)"},
-    "window": {"default": "10-16", "about": "local hours it may act in (START-END), so people are around to notice and respond"},
-    "hold": {"default": "60", "about": "seconds each prank lasts before it's undone"},
-    "chance": {"default": "25", "about": "percent chance of a prank at each roll (every 30 minutes)"}
+    "services": {
+      "default": "",
+      "about": "only these systemd units (space-separated); blank = any running service its account is allowed to stop"
+    },
+    "processes": {
+      "default": "",
+      "about": "only these process names; blank = any process its account is allowed to kill (its own session excepted)"
+    },
+    "spare": {
+      "default": "",
+      "about": "never touch these, even if reachable (unit or process names, space-separated)"
+    },
+    "ports": {
+      "default": "40000-40100",
+      "about": "range for decoy listening ports (opened, held, closed)"
+    },
+    "window": {
+      "default": "10-16",
+      "about": "local hours it may act in (START-END), so people are around to notice and respond"
+    },
+    "hold": {
+      "default": "60",
+      "about": "seconds each prank lasts before it's undone"
+    },
+    "chance": {
+      "default": "25",
+      "about": "percent chance of a prank at each roll (every 30 minutes)"
+    },
+    "allow_root": {
+      "default": "no",
+      "about": "run as root? 'no' by default: give it a scoped account instead, since as root 'whatever it can reach' is everything"
+    }
   },
   "config": {
     "idle_prompt": null,
     "alert_command": "logger -t hobkin \"$HOBKIN_ALERT\"",
-    "wake": {"command": "spells/prank.sh", "every": "30m", "timeout": 600}
+    "wake": {
+      "command": "spells/prank.sh",
+      "every": "30m",
+      "timeout": 600
+    }
   }
 }

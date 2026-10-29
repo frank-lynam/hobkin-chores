@@ -40,7 +40,7 @@ path: `hobkin --chore ./chores/sweep --set folder=~/Downloads`.
 | **pulse** | Takes a machine's vital signs — disk, memory, load, failed services — and raises the alarm when something's amiss. | `disk_pct`, `mem_pct`, `load_per_cpu` |
 | **hourglass** | Watches everything that can expire — TLS certs, Linux passwords and accounts, database logins — and warns before the sand runs out. | `targets`, `days` |
 | **ark** | Before you kill an instance: copies its logs, config and data to S3 / rclone / a mounted disk, with a manifest and checksums (two of every log). | `dest`, `sources` |
-| **mischief** | Chaos for your detection: during working hours, briefly stops allow-listed services, kills allow-listed processes and opens decoy ports, always puts them back, and keeps a private ledger to score what the team caught. | `services`, `processes`, `window` |
+| **mischief** | Chaos for your detection: during working hours, briefly stops services, kills processes and opens decoy ports, whatever its account can reach, always puts them back, and keeps a private ledger to score what the team caught. | `spare`, `window`, `hold` |
 | **shipwright** | Hand it a pile of installation files: it works out how to install them, does it for real, and writes a repeatable, idempotent install script from the steps that actually worked. | `from`, `script` |
 | **lockdown** | Breach response: encrypts sensitive data with a key *you* hold offline, so an attacker can't read it but you can still recover it. | `recipient`, `paths` |
 
@@ -65,13 +65,15 @@ your data, not gamble with it:
 
 ### And the one that makes trouble on purpose
 
-**mischief** is a chaos monkey with manners. It only touches what you allow-list
-(there's no default), never ssh, logging, auditing or the monitoring under test,
-acts only in working hours, undoes every prank after a short hold (and raises the
-alarm if something doesn't come back), and stops for anyone who `touch`es
-`mischief.off` in its workspace. Its ledger is the answer key for scoring
-detection: keep it from the team until you compare notes. Stopping services needs
-a sudoers rule limited to `systemctl stop`/`start` on the listed units.
+**mischief** is a chaos monkey with manners. Its playground is whatever its
+account can reach, so give it a scoped account: it discovers the running services
+and its account's processes, tries one, and remembers what turned out to be out of
+reach. It never touches ssh or the network stack (lockouts), logging, auditing,
+the monitoring under test, hobkin, its own session, or anything you `spare`. It
+won't run as root unless you say so. It acts only in working hours, undoes every
+prank after a short hold (and raises the alarm if something doesn't come back),
+and stops for anyone who `touch`es `mischief.off` in its workspace. Its ledger is
+the answer key for scoring detection: keep it from the team until you compare notes.
 
 ## How a chore is built
 
