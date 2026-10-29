@@ -1,0 +1,13 @@
+{
+  "name": "magpie",
+  "description": "Collects shiny things: new versions and security advisories for this system's packages and your projects' dependencies, and only speaks up when something new and worth it turns up.",
+  "settings": {
+    "projects": {"default": "~/workspace", "about": "folders to look for projects in (requirements.txt, pyproject.toml, package.json, go.mod, Cargo.toml...)"}
+  },
+  "config": {
+    "idle_prompt": null,
+    "safe_mode": true,
+    "alert_command": "logger -t hobkin \"$HOBKIN_ALERT\"",
+    "wake": {"command": "spells/shiny.sh", "every": "12h"}
+  }
+}

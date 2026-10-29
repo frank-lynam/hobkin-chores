@@ -1,0 +1,14 @@
+{
+  "name": "shrivener",
+  "description": "Hears your repos' confessions: reviews each new commit (bugs, risky changes, missing tests) and keeps the documentation in step with the code, on its own branch, in its own worktree.",
+  "settings": {
+    "repos": {"about": "git repos to watch: space-separated paths, or a folder whose subfolders are repos (e.g. ~/workspace)"},
+    "branch": {"default": "shrivener/docs", "about": "the branch its doc fixes go on (never your main branch)"},
+    "push": {"default": "no", "about": "push its branch to the remote? 'no' leaves it local for you to look at"}
+  },
+  "config": {
+    "idle_prompt": null,
+    "alert_command": "logger -t hobkin \"$HOBKIN_ALERT\"",
+    "wake": {"command": "spells/confessions.sh", "every": "30m"}
+  }
+}

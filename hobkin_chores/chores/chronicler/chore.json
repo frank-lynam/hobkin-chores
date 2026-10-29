@@ -1,0 +1,14 @@
+{
+  "name": "chronicler",
+  "description": "Writes the chronicle: once a week, a short, readable digest of what happened on this machine and in your repos (commits, installs, reboots, failures, incidents, disk), for people who weren't watching.",
+  "settings": {
+    "repos": {"default": "~/workspace", "about": "git repos (paths, or folders of repos) whose commits go in the chronicle"},
+    "day": {"default": "Mon", "about": "the day the chronicle comes out (Mon...Sun)"}
+  },
+  "config": {
+    "idle_prompt": null,
+    "safe_mode": true,
+    "alert_command": "logger -t hobkin \"$HOBKIN_ALERT\"",
+    "wake": {"command": "spells/due.sh", "every": "1h"}
+  }
+}
