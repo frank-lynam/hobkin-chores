@@ -19,6 +19,30 @@ destruction.
   plaintext is not** — see "Shredding" below. By default you encrypt and leave
   the plaintext; shredding is a separate, deliberate step.
 
+## Setting up the key (once, off this box — this is the whole trick)
+
+**Never make the keypair on this machine.** Make it somewhere you trust, and only
+ever put the *public* half here:
+
+1. On your laptop (offline is best), generate a keypair:
+   - `age-keygen -o key.txt` — prints a public recipient `age1...`; the secret is in `key.txt`.
+   - or gpg: generate on the laptop, `gpg --export --armor you@co > pub.asc`.
+2. Put only the **public key** on the server — that's `{{recipient}}`. A public key
+   can lock but not unlock, so it's safe to leave on a box that might be breached.
+3. Keep the **private key off the box, forever**: a YubiKey/HSM (it never leaves
+   the device), on paper in a safe, or split with Shamir (`ssss`) into N-of-M
+   shares so no one person can unlock alone. Keep spare copies of the *public* key
+   handy (it's not secret) so you can always re-deploy lockdown.
+
+That's the one-way export: the machine only ever holds the key that locks, so an
+attacker with full root still can't read a thing — and you, with the offline key,
+still can.
+
+**Prove recovery before you trust it.** Keep a canary: encrypt a known file now,
+and every so often (your watch reminds you) confirm on another machine, with the
+offline key, that you can still decrypt it. If the canary ever won't open, your
+real data won't either — fix that before an emergency, not during one.
+
 ## In an emergency
 
 1. **Check you're ready** (do this in calm times too — your watch does it every

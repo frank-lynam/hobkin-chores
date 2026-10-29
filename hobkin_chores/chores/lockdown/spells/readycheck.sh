@@ -17,5 +17,13 @@ fi
 if [ ${#problems[@]} -gt 0 ]; then
   printf '%s\n' "lockdown isn't ready (fix this BEFORE you need it):" "${problems[@]/#/  - }"
   echo "  Until it's ready, you can't protect the data in an emergency."
+else
+  # ready — but readiness only proves it can LOCK. Remind to prove UNLOCK works, off the box.
+  canary="${HOBKIN_WORK:-.}/.lockdown-canary-checked"
+  if [ ! -f "$canary" ] || [ -n "$(find "$canary" -mtime +30 2>/dev/null)" ]; then
+    echo "lockdown can encrypt, but have you proven you can DECRYPT?"
+    echo "  Decrypt a .locked file on another machine with your offline key, then: touch '$canary'"
+    echo "  (A key that locks but can't unlock protects no one.)"
+  fi
 fi
 exit 0
