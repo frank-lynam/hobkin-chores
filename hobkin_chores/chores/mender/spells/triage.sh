@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# triage.sh — a fast, READ-ONLY sweep of everything that usually breaks. Runs on $CHORE_TARGET via on.sh.
+# triage.sh — a fast, READ-ONLY sweep of everything that usually breaks (on your host, if you have one).
 set -uo pipefail
-on="$(cd "$(dirname "$0")" && pwd)/on.sh"
-sec() { echo; echo "=== $1 ==="; "$on" "$2" 2>&1 | head -n "${3:-25}"; }
-echo "triage of ${CHORE_TARGET:-local} at $(date '+%F %T')"
+sec() { echo; echo "=== $1 ==="; bash -c "$2" 2>&1 | head -n "${3:-25}"; }
+echo "triage of $(hostname) at $(date '+%F %T')"
 sec "who and how long up"     'hostname; uptime; last -x reboot shutdown 2>/dev/null | head -5'
 sec "disk (space, then inodes)" 'df -hP -x tmpfs -x devtmpfs; echo; df -iP -x tmpfs -x devtmpfs | awk "NR==1 || \$5+0>=80"'
 sec "memory, and OOM kills"   'free -h; journalctl -k -b --no-pager 2>/dev/null | grep -i -E "out of memory|oom-kill" | tail -5'

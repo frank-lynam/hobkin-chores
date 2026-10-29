@@ -1,9 +1,11 @@
 {
   "name": "mender",
-  "description": "Mr. Fix-it: works out what happened to a sick or offline machine, finds the root cause, and gets it back up, carefully, reversibly, and with a report of what it did.",
+  "description": "Mr. Fix-it: works out what happened to a sick or offline machine, finds the root cause, and gets it back up, carefully, reversibly, and with a report of what it did. For a box too broken to run an agent, give it --host and it works over ssh.",
   "settings": {
-    "target": {"default": "local", "about": "the machine to mend: 'local' (this one), or 'user@host' over ssh (for a box too broken to run an agent, or offline)"},
-    "symptom": {"default": "", "about": "what you've noticed, if anything: 'site is down', 'can't ssh in', 'disk full alerts' (blank: it looks for itself)"}
+    "symptom": {
+      "default": "",
+      "about": "what you've noticed, if anything: 'site is down', 'can't ssh in', 'disk full alerts' (blank: it looks for itself)"
+    }
   },
   "config": {
     "idle_prompt": null,

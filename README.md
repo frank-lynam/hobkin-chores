@@ -12,7 +12,7 @@ keep a counter-spell for every spell so the workshop never floods.
 
 ## Get going
 
-Needs hobkin 0.5.1+. Install this alongside it and copy the chores where hobkin
+Needs hobkin 0.5.2+. Install this alongside it and copy the chores where hobkin
 looks:
 
 ```sh
@@ -26,7 +26,15 @@ Then give one to a new or existing agent, with hobkin itself:
 ```sh
 hobkin --chore sweep --set folder=~/Downloads --id tidier --safe
 hobkin URL MODEL KEY --chore pulse --chat     # a new agent on a new model, watching this box
+hobkin --chore pulse --host admin@web-1 --id web1-pulse   # watching another machine, over ssh
 ```
+
+Any chore works on another machine: with `--host user@host`, the agent's
+commands, files, spells and watch all act there, over ssh, while its memory and
+conversation stay here. A watch from outside even survives the box dying ("can't
+reach it" wakes the agent), and mender can mend a machine too broken to run an
+agent itself. An agent can hold several chores at once (a hearthboard worker that
+also runs pulse, say).
 
 Working from a clone instead of installing? Point hobkin's `chore_dirs` at the
 `chores/` folder (where `hobkin-chores path` prints), or pass a chore by its
@@ -40,7 +48,7 @@ path: `hobkin --chore ./chores/sweep --set folder=~/Downloads`.
 | **pulse** | Takes a machine's vital signs — disk, memory, load, failed services — and raises the alarm when something's amiss. | `disk_pct`, `mem_pct`, `load_per_cpu` |
 | **hourglass** | Watches everything that can expire — TLS certs, Linux passwords and accounts, database logins — and warns before the sand runs out. | `targets`, `days` |
 | **ark** | Before you kill an instance: copies its logs, config and data to S3 / rclone / a mounted disk, with a manifest and checksums (two of every log). | `dest`, `sources` |
-| **mender** | Mr. Fix-it: works out what happened to a sick or offline machine (locally, or over ssh when it's too broken to think for itself), finds the root cause, mends it gently and reversibly, and writes a report. | `target`, `symptom` |
+| **mender** | Mr. Fix-it: works out what happened to a sick or offline machine (with `--host`, over ssh, when it's too broken to think for itself), finds the root cause, mends it gently and reversibly, and writes a report. Also good as a break-glass playbook: `hobkin breakglass ID "site down" --chore mender`. | `symptom` |
 | **mischief** | Chaos for your detection: during working hours, briefly stops services, kills processes and opens decoy ports, whatever its account can reach, always puts them back, and keeps a private ledger to score what the team caught. | `spare`, `window`, `hold` |
 | **shipwright** | Hand it a pile of installation files: it works out how to install them, does it for real, and writes a repeatable, idempotent install script from the steps that actually worked. | `from`, `script` |
 | **lockdown** | Breach response: encrypts sensitive data with a key *you* hold offline, so an attacker can't read it but you can still recover it. | `recipient`, `paths` |
@@ -107,7 +115,16 @@ sweep/
 ```
 
 - **`settings`** — each has an `about`, and either a `default` or nothing (a
-  setting with no default must be given with `--set NAME=VALUE`).
+  setting with no default must be given with `--set NAME=VALUE`). A setting can
+  name its environment variable (`"env": "AWS_ACCESS_KEY_ID"`; else it's
+  `$CHORE_<NAME>`). One marked `"secret": true` is given with `--secret
+  NAME=VALUE` (or asked for), goes only into the agent's `secrets.env`, and
+  wherever `{{it}}` appears it becomes `${ITS_ENV_NAME}`, so the value never lands
+  in config or in front of the model.
+- **`fetch`** (optional) — files to download into the agent's folder at setup,
+  e.g. `{"skills/x/SKILL.md": {"url": "{{url}}/api/skill", "headers": {...}}}`.
+- **`given`** (optional) — the message that tells the agent it has the job, if
+  not the default one.
 - **`config`** — merged into the agent's `config.json`. Anything hobkin's config
   takes: a `wake` watch (a script hobkin runs while idle, waking the agent only
   when it prints something — watching costs no model calls), `safe_mode` (with
@@ -116,12 +133,13 @@ sweep/
 - **`{{setting}}`** anywhere in `CHORE.md`, `config` or a tool's description is
   filled in. Every setting also reaches spells, tools and the watch as an
   environment variable: `folder` → `$CHORE_FOLDER`.
-- **`CHORE.md`** is copied into the agent's folder, so it's part of the agent's
-  instructions every turn, right next to the sorcerer's-apprentice rule hobkin
-  adds for every chore.
+- **`CHORE.md`** is copied into the agent's folder as `CHORE-<name>.md`, so it's
+  part of the agent's instructions every turn, right next to the
+  sorcerer's-apprentice rule hobkin adds for chores (`"apprentice": false` leaves
+  that out, for a chore that isn't about spells).
 
-Setting a chore up records it (and its settings) in the agent's `config.json`
-under `"chore"`, and tells the agent it has a new job. Run it again with other
+Setting a chore up records it (and its settings, secrets by name only) in the
+agent's `config.json` under `"chores"`, and tells the agent it has a new job. Run it again with other
 settings to change it. Writing your own? Copy the closest chore here, keep the
 spells dry-run-by-default with a limit and a clean stop, and send a PR.
 

@@ -1,10 +1,10 @@
 # Mender: find out what broke, and mend it
 
-Something's wrong with **{{target}}**. What's been noticed so far: "{{symptom}}"
-(blank means nobody's sure, so look for yourself). Your job: work out what
-happened and why, get it working again, and leave a report a tired human can read
-in two minutes. Every command for that machine goes through `spells/on.sh`
-(`spells/on.sh systemctl status nginx`), so the same steps work locally or over ssh.
+Something's wrong with the machine you're working on (this one, or your host if
+you were given one: then everything you run happens there, over ssh). What's been
+noticed so far: "{{symptom}}" (blank means nobody's sure, so look for yourself).
+Your job: work out what happened and why, get it working again, and leave a report
+a tired human can read in two minutes.
 
 ## 1. Triage first (read-only)
 

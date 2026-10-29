@@ -8,6 +8,18 @@
     "sources": {
       "default": "/etc /var/log",
       "about": "space-separated paths to copy (add your app's data, uploads, state)"
+    },
+    "aws_access_key_id": {
+      "default": "",
+      "secret": true,
+      "env": "AWS_ACCESS_KEY_ID",
+      "about": "for an s3:// dest, if this box has no instance role or ~/.aws credentials (kept in secrets.env)"
+    },
+    "aws_secret_access_key": {
+      "default": "",
+      "secret": true,
+      "env": "AWS_SECRET_ACCESS_KEY",
+      "about": "its secret (kept in secrets.env)"
     }
   },
   "config": {
