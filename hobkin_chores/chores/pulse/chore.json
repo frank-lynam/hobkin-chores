@@ -1,0 +1,27 @@
+{
+  "name": "pulse",
+  "description": "Watch a machine's health (disk, memory, load, failed services) and raise the alarm when something looks amiss.",
+  "settings": {
+    "disk_pct": {
+      "default": "90",
+      "about": "warn when any filesystem is at least this % full"
+    },
+    "mem_pct": {
+      "default": "90",
+      "about": "warn when memory is at least this % used"
+    },
+    "load_per_cpu": {
+      "default": "4",
+      "about": "warn when load average per CPU is at least this"
+    }
+  },
+  "config": {
+    "idle_prompt": null,
+    "safe_mode": true,
+    "alert_command": "logger -t hobkin \"$HOBKIN_ALERT\"",
+    "wake": {
+      "command": "spells/vitals.sh",
+      "every": "2m"
+    }
+  }
+}

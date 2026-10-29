@@ -24,32 +24,32 @@ hobkin-chores install             # copy them into ~/.hobkins/_shared/chores/
 Then give one to a new or existing agent, with hobkin itself:
 
 ```sh
-hobkin --chore tidy --set folder=~/Downloads --id tidier --safe
-hobkin URL MODEL KEY --chore health-watch --chat     # a new agent on a new model, watching this box
+hobkin --chore sweep --set folder=~/Downloads --id tidier --safe
+hobkin URL MODEL KEY --chore pulse --chat     # a new agent on a new model, watching this box
 ```
 
 Working from a clone instead of installing? Point hobkin's `chore_dirs` at the
 `chores/` folder (where `hobkin-chores path` prints), or pass a chore by its
-path: `hobkin --chore ./chores/tidy --set folder=~/Downloads`.
+path: `hobkin --chore ./chores/sweep --set folder=~/Downloads`.
 
 ## The chores
 
 | Chore | What it does | Key settings |
 |---|---|---|
-| **tidy** | Keeps a folder organized — sorts loose files into subfolders, surfaces clutter, never deletes. | `folder` |
-| **health-watch** | Watches disk, memory, load and failed services; raises the alarm when something's amiss. | `disk_pct`, `mem_pct`, `load_per_cpu` |
-| **cert-watch** | Watches TLS certificates (live hosts and PEM files); warns before any expires. | `targets`, `days` |
-| **salvage-to-s3** | Before you kill an instance: copies its logs, config and data to S3 / rclone / a mounted disk, with a manifest and checksums. | `dest`, `sources` |
-| **lockdown** | Breach response: encrypts sensitive data in place with a key *you* hold offline, so an attacker can't read it but you can still recover it. | `recipient`, `paths` |
+| **sweep** | Keeps a folder organized — sorts loose files into subfolders, surfaces clutter, never deletes. | `folder` |
+| **pulse** | Takes a machine's vital signs — disk, memory, load, failed services — and raises the alarm when something's amiss. | `disk_pct`, `mem_pct`, `load_per_cpu` |
+| **hourglass** | Watches everything that can expire — TLS certs, Linux passwords and accounts, database logins — and warns before the sand runs out. | `targets`, `days` |
+| **ark** | Before you kill an instance: copies its logs, config and data to S3 / rclone / a mounted disk, with a manifest and checksums (two of every log). | `dest`, `sources` |
+| **lockdown** | Breach response: encrypts sensitive data with a key *you* hold offline, so an attacker can't read it but you can still recover it. | `recipient`, `paths` |
 
 `hobkin-chores list` prints each one's settings and the exact command to start it.
 
 ### A note on the two break-glass chores
 
-**salvage-to-s3** and **lockdown** are for bad days, and both are built to protect
+**ark** and **lockdown** are for bad days, and both are built to protect
 your data, not gamble with it:
 
-- **salvage** copies — it never deletes the source. It dumps databases properly
+- **ark** copies — it never deletes the source. It dumps databases properly
   (not live files), writes a manifest with checksums, and is safe to run again to
   top up. You run it when decommissioning; the agent confirms what landed before
   you kill the box.
@@ -66,7 +66,7 @@ your data, not gamble with it:
 A chore is a folder (see `chores/` for the real ones):
 
 ```
-tidy/
+sweep/
   chore.json      name, description, settings, and config to merge into the agent's
   CHORE.md        the instructions (part of the agent's prompt every turn)
   spells/         starter scripts, copied to the agent's work/spells/
@@ -77,7 +77,7 @@ tidy/
 
 ```json
 {
-  "name": "tidy",
+  "name": "sweep",
   "description": "Keep a folder organized ...",
   "settings": {
     "folder": {"about": "the folder to keep tidy"},

@@ -1,0 +1,17 @@
+{
+  "name": "ark",
+  "description": "Before you kill an instance: copy its logs, config and data somewhere safe (S3, rclone, or a mounted disk), with a manifest and checksums.",
+  "settings": {
+    "dest": {
+      "about": "where copies go: an s3://bucket/prefix, an rclone 'remote:path', or a local/mounted folder"
+    },
+    "sources": {
+      "default": "/etc /var/log",
+      "about": "space-separated paths to copy (add your app's data, uploads, state)"
+    }
+  },
+  "config": {
+    "idle_prompt": null,
+    "alert_command": "logger -t hobkin \"$HOBKIN_ALERT\""
+  }
+}

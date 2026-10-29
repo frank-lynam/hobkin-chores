@@ -1,0 +1,13 @@
+{
+  "name": "hourglass",
+  "description": "Watch everything that can expire — TLS certificates, Linux passwords and accounts, database logins — and warn before the sand runs out.",
+  "settings": {
+    "targets": {"default": "", "about": "TLS certs to check: space-separated host:port and/or PEM paths, e.g. 'example.com:443 /etc/ssl/site.pem' (leave blank for none)"},
+    "days": {"default": "21", "about": "warn when anything is within this many days of expiring"}
+  },
+  "config": {
+    "idle_prompt": null,
+    "alert_command": "logger -t hobkin \"$HOBKIN_ALERT\"",
+    "wake": {"command": "spells/expiring.sh", "every": "12h"}
+  }
+}
