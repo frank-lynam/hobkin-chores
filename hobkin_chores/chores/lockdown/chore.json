@@ -1,0 +1,14 @@
+{
+  "name": "lockdown",
+  "description": "Breach response: encrypt sensitive data in place with a key YOU hold offline, so an attacker on the box can't read it — but you can still recover it.",
+  "settings": {
+    "recipient": {"about": "the PUBLIC key to encrypt to: an age recipient (age1...) or a gpg key id/email. Its private half MUST live off this machine (printed, HSM, a vault) — that's what keeps the attacker (and this agent) out while you keep recovery."},
+    "paths": {"about": "where the sensitive data is: space-separated folders/files, e.g. '/var/lib/app/customers /etc/secrets'"},
+    "patterns": {"default": "*.sql *.dump *.csv *.json *.pem *.key *.env", "about": "which files under those paths count as sensitive (globs)"}
+  },
+  "config": {
+    "idle_prompt": null,
+    "alert_command": "logger -t hobkin \"$HOBKIN_ALERT\"",
+    "wake": {"command": "spells/readycheck.sh", "every": "6h"}
+  }
+}

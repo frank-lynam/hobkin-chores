@@ -1,0 +1,1 @@
+{"description": "Count the loose files at the top level of {{folder}} (older than an hour).", "input_schema": {"type": "object", "properties": {}}}

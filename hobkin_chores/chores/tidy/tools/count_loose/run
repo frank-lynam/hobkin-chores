@@ -1,0 +1,2 @@
+#!/bin/sh
+find "$CHORE_FOLDER" -maxdepth 1 -type f ! -name '.*' -mmin +60 2>/dev/null | wc -l | tr -d ' '

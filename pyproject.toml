@@ -1,0 +1,38 @@
+[build-system]
+requires = ["flit_core>=3.12,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "hobkin-chores"
+description = "Standing jobs for a hobkin: ready-made chores (tidy a folder, watch a system, save an instance's data) you hand an agent and leave it to."
+dynamic = ["version"]   # from hobkin_chores.__version__
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Frank Lynam" }]
+requires-python = ">=3.9"
+dependencies = []
+keywords = ["agent", "llm", "ai", "unattended", "autonomous", "cli", "hobkin", "automation", "monitoring"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://github.com/frank-lynam/hobkin-chores"
+Issues = "https://github.com/frank-lynam/hobkin-chores/issues"
+hobkin = "https://github.com/frank-lynam/hobkin"
+
+[project.scripts]
+hobkin-chores = "hobkin_chores:cli"
+
+[tool.flit.sdist]
+include = ["tests/"]
+exclude = ["CLAUDE.md", "AGENTS.md"]
