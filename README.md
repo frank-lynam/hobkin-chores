@@ -12,7 +12,7 @@ keep a counter-spell for every spell so the workshop never floods.
 
 ## Get going
 
-Needs hobkin 0.6.0+. Install this alongside it and copy the chores where hobkin
+Needs hobkin 0.5.1+. Install this alongside it and copy the chores where hobkin
 looks:
 
 ```sh
