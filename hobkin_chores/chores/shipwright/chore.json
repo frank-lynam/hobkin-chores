@@ -1,0 +1,12 @@
+{
+  "name": "shipwright",
+  "description": "Hand it a pile of installation files: it works out how to install them, actually does it, and builds a repeatable install script from the steps that really worked.",
+  "settings": {
+    "from": {"about": "the folder holding the installation files (packages, tarballs, installers, READMEs)"},
+    "script": {"default": "install.sh", "about": "the name of the repeatable install script it writes (in its workspace's shipwright/ folder)"}
+  },
+  "config": {
+    "idle_prompt": null,
+    "alert_command": "logger -t hobkin \"$HOBKIN_ALERT\""
+  }
+}

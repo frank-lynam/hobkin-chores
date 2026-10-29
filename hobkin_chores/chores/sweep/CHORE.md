@@ -28,3 +28,25 @@ When you change it, keep the dry-run and the limit, and note what it does in
 and put the flood in your blooper reel.
 
 Your `count_loose` tool tells you how many loose files there are right now.
+
+## Leftover sysadmin artifacts
+
+People make a quick backup before an edit (`nginx.conf.bak`, `sshd_config.orig`,
+`app.conf.2025-03-01`, `hosts~`, `.dpkg-old`, `.rpmsave`, `.swp`) and never come back
+for it. They clutter `/etc`, confuse the next person, and sometimes hold old secrets.
+Look for them in `{{artifact_paths}}` (and in {{folder}}).
+
+- **Identify everything.** `spells/artifacts.sh` lists every artifact: its age,
+  its original, and whether that original still exists and has moved on since.
+  Put the list in a short report.
+- **Stale means all three:** older than {{stale_days}} days, the original exists,
+  and the original has changed since the backup was made (so the backup isn't the
+  only copy of anything). Anything else is "keep, but flag".
+- **Quarantine, don't delete.** `spells/artifacts.sh --quarantine` moves stale
+  artifacts it's allowed to move into `_quarantine/<date>/` next to the sweep
+  folder, keeping their original paths, with a manifest. For ones you can't move
+  (`/etc` in safe mode), write a reviewable script in `$HOBKIN_WORK/for-review/`
+  that does the same quarantine. A human can empty the quarantine later.
+- **Mind the secrets.** An old `.bak` of a config can hold credentials that have
+  since been rotated out of the live file. Say so in your report, without quoting
+  them.

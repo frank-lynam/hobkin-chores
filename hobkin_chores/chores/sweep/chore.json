@@ -1,6 +1,6 @@
 {
   "name": "sweep",
-  "description": "Keep a folder organized: sort loose files into sensible subfolders, surface clutter, never delete.",
+  "description": "Keep a folder organized, and find leftover sysadmin artifacts (.bak, .orig, dated config copies...): sort, surface, quarantine the stale ones, never delete.",
   "settings": {
     "folder": {
       "about": "the folder to keep tidy, e.g. ~/Downloads"
@@ -8,6 +8,14 @@
     "threshold": {
       "default": "20",
       "about": "wake when more than this many loose files pile up"
+    },
+    "artifact_paths": {
+      "default": "/etc",
+      "about": "where to look for leftover backups and editor droppings (space-separated)"
+    },
+    "stale_days": {
+      "default": "90",
+      "about": "an artifact older than this, whose original has moved on, counts as stale"
     }
   },
   "config": {
