@@ -40,6 +40,7 @@ path: `hobkin --chore ./chores/sweep --set folder=~/Downloads`.
 | **pulse** | Takes a machine's vital signs — disk, memory, load, failed services — and raises the alarm when something's amiss. | `disk_pct`, `mem_pct`, `load_per_cpu` |
 | **hourglass** | Watches everything that can expire — TLS certs, Linux passwords and accounts, database logins — and warns before the sand runs out. | `targets`, `days` |
 | **ark** | Before you kill an instance: copies its logs, config and data to S3 / rclone / a mounted disk, with a manifest and checksums (two of every log). | `dest`, `sources` |
+| **mender** | Mr. Fix-it: works out what happened to a sick or offline machine (locally, or over ssh when it's too broken to think for itself), finds the root cause, mends it gently and reversibly, and writes a report. | `target`, `symptom` |
 | **mischief** | Chaos for your detection: during working hours, briefly stops services, kills processes and opens decoy ports, whatever its account can reach, always puts them back, and keeps a private ledger to score what the team caught. | `spare`, `window`, `hold` |
 | **shipwright** | Hand it a pile of installation files: it works out how to install them, does it for real, and writes a repeatable, idempotent install script from the steps that actually worked. | `from`, `script` |
 | **lockdown** | Breach response: encrypts sensitive data with a key *you* hold offline, so an attacker can't read it but you can still recover it. | `recipient`, `paths` |
